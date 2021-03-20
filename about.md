@@ -12,4 +12,6 @@ Lost+Found was the name of a radio show I did back in Syracuse, NY.  It was a p
 
 Not unlike this blog.
 
-Fred Dushin
+This site is built using [Jekyll](https://jekyllrb.com).
+
+<img src="../assets/images/whoami.png" width="14%">
