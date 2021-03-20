@@ -36,3 +36,7 @@ clean:
 
 install:
 	bundle install
+
+# try this when the world turns to shit
+update:
+	sudo bundle update

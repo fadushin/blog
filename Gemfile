@@ -29,3 +29,9 @@ gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Performance-booster for watching directories on Windows
 gem "wdm", "~> 0.1.0" if Gem.win_platform?
+
+
+require 'rbconfig'
+if RbConfig::CONFIG['target_os'] =~ /(?i-mx:bsd|dragonfly)/
+    gem 'rb-kqueue', '>= 0.2'
+end
