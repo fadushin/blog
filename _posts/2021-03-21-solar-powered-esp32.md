@@ -10,7 +10,7 @@ If blinking an LED is the "Hello, World!" of the Internet of Things, then buildi
 
 And while integrating a temperature sensor with a micro-controller gives one a well-deserved sense of accomplishment, I have always been a little disappointed with the various Getting Started tutorials you can find on the internet on such topics, finding them silent about the steps it would take to actually build a weather station and let it sit out in, well, the weather, far away from a continuous source of electricity.
 
-Like many people, I am also starting to gain and interest in, and an appreciation for, the engineering that is demanded out of so called "green" energy.  While reducing our carbon footprint is a critical goal we need to strive for as a species, there are significant challenges in converting our consumption to using renewable sources.  The technology is certainly evolving, and I think it is incumbent on us, as engineers, to try to understand and, if possible, improve on any discoveries and developments.
+Like many people, I am also starting to gain and interest in, and an appreciation for, the engineering that is demanded out of so called "green" energy.  While reducing our carbon footprint is a critical goal we need to reach, there are significant challenges in converting our consumption of energy to using renewable sources.  The technology is certainly evolving, and I think it is incumbent on us, as engineers, to try to understand and, if possible, improve on any discoveries and developments.
 
 So, I started a little research project to try to understand how to build a self-sustaining, battery powered, and solar charged circuit to drive an [Espressif](https://www.espressif.com) [ESP32](https://www.espressif.com/en/products/socs/esp32).  An actual weather station can come later.  What I wanted to do first was to understand what it would take to build an ESP32-based device that is going to be outside for a long period of time, away from a constant power source.
 
@@ -27,7 +27,7 @@ In thinking about such a a circuit, I was after a few things:
 
 With these requirements, I set out on a very fun and interesting journey to try to find a workable solution, and I am happy to say that I came up with something that seems to work fairly well, which I describe below in this blog post.  I won't say that it is the best solution out there, or that it can't be improved upon.  (That's kind of the "log" part of this 'blog.)  But it does seem to work.
 
-I should note that this blog post comes with the usual disclaimers.  Following instructions in this document could win you the Nobel Prize, but equally (or perhaps more) likely, it could burn your house down.  The author provides no warranty of suitability or fitness of purpose.  Please exercise care and caution when working with electronic components, especially with lithium batteries.
+I should note that this blog post comes with the usual disclaimers.  The author provides no warranty of suitability or fitness of purpose.  Please exercise care and caution when working with electronic components, especially with lithium batteries.
 
 > Note.  As it will be evident, I am not trained professionally in electrical engineering.  So I am not offended in the least if you take most of what I write with extreme skepticism.  If you do find egregious (or just plain stupid) mistakes, please let me know.  See the bottom of the page for contact information.
 
@@ -106,7 +106,7 @@ The size of the current sense resistor is based off an internal 120mV reference,
 
 The ESP32 can be a finnicky device, especially in low power situations, and especially when there is a large current draw when firing up the WiFi radio.  Brownouts are not uncommon, if there is insufficient power, and a circuit (and accompanying software) that may run unattended for days or months needs to be able to accommodate these scenarios.
 
-The ESP32 is powered off the output battery circuit, but it is controlled by a voltage detector, P-channel MOSFET, and Zener diode that will cut off power to the ESP32 if voltage drops below a certain level (in my case, around 3v).  The basic idea is that we do not want to run the battery flat if, for some reason, we can't come up with enough power to start the ESP32.  Instead, the circuit should shut down power to the ESP32 until it has charged to a sufficient voltage.
+The ESP32 is powered off the output battery circuit, but it is controlled by an active-low voltage supervisor, which, when the battery voltage drops below a certain level (3.0v, in my experiments), will pull the EN(able) pin low on the ESP, and subsequently cut off power to the ESP32.  The basic idea is that we do not want to run the battery flat if, for some reason, we can't come up with enough power to start the ESP32.  Instead, the circuit should shut down power to the ESP32 until it has charged to a sufficient voltage.
 
 # Reading Battery Voltage
 
@@ -116,17 +116,17 @@ I did find that it is essential to perform any ADC measurements on the ESP32 bef
 
 # Prototype Board
 
-KiCad drawings for this circuit are available from my [solar-esp32](https://github.com/fadushin/solar-esp32/tree/develop) Github repository.
+KiCad drawings for this circuit are available from my [solar-esp32](https://github.com/fadushin/solar-esp32/tree/v0.1.0) Github repository.  You can order [3 copies of this board](https://oshpark.com/shared_projects/3otCW1qD) (without components) on [OshPark](https://oshpark.com/) for $5.
 
 Here is a 3d rendering of side 1 of this circuit, which contains the bulk of the charging components:
 
-![solar-0xFD02-side1](/assets/images/solar-powered-esp32/solar-0xFD02-side1.jpg)
+![solar-esp32-front](/assets/images/solar-powered-esp32/solar-esp32-front.png)
 
-Side 2 contains the additional goodies for the ESP32, including the power circuit described above, the voltage divider for reading battery voltage, a 10 uF capacitor to smooth out any voltage drops, and a status LED (for convenience), so that I can provide some indication of what state the device is in:
+Side 2 contains the additional goodies for the ESP32, including the voltage supervisor described above, the voltage divider for reading battery voltage, a 10 uF capacitor to smooth out any voltage drops, and a status LED (for convenience), so that I can provide some indication of what state the device is in:
 
-![solar-0xFD02-side2](/assets/images/solar-powered-esp32/solar-0xFD02-side2.jpg)
+![solar-esp32-back](/assets/images/solar-powered-esp32/solar-esp32-back.png)
 
-The board fits on a 1"x1" PCB, which is compatible with OshPark's cheapest rates :)
+The board fits on a 1" x 1" PCB.
 
 Here is the charging board, assembled with its external components:
 
